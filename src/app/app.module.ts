@@ -10,6 +10,7 @@ import { ElementBuilderComponent } from './components/element-builder/element-bu
 import { TreatmentPlanElementService } from './services/treatment-plan-element.service';
 import { FormControlService } from './services/form-control.service';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
+import { SectionBuilderComponent } from './components/section-builder/section-builder.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.com
     TreatmentPlanElementComponent,
     ElementBuilderComponent,
     DynamicFormComponent,
+    SectionBuilderComponent,
   ],
   imports: [
     BrowserModule,

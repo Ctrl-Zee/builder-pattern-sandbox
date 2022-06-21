@@ -1,8 +1,52 @@
-<form [formGroup]="treatmentPlanForm">
+<!-- <form [formGroup]="treatmentPlanForm">
   <div *ngFor="let component of sections.components">
     <app-element-builder
       [component]="component"
       [form]="treatmentPlanForm"
     ></app-element-builder>
   </div>
+</form> -->
+
+<form [formGroup]="treatmentPlanForm">
+  <section
+    formArrayName="sectionGroups"
+    *ngFor="let section of sectionGroupList.controls; let i = index"
+  >
+    <div [formGroupName]="i">
+      <div *ngFor="let component of sections[i].components">
+        <!--<app-element-builder
+          [component]="component"
+          [formGroupName]="i"
+        ></app-element-builder> -->
+        <div [ngSwitch]="component.componentDefinition?.controlTypeId">
+          <p-editor
+            *ngSwitchCase="1"
+            [formControlName]="component.componentDefinitionId"
+            [style]="{ height: '320px' }"
+          >
+            <ng-template pTemplate="header">
+              <span class="ql-formats">
+                <button
+                  type="button"
+                  class="ql-bold"
+                  aria-label="Bold"
+                ></button>
+                <button
+                  type="button"
+                  class="ql-italic"
+                  aria-label="Italic"
+                ></button>
+                <button
+                  type="button"
+                  class="ql-underline"
+                  aria-label="Underline"
+                ></button>
+              </span>
+            </ng-template>
+          </p-editor>
+          <!-- <span *ngSwitchCase="1">Put the radio buttons here</span> -->
+        </div>
+      </div>
+    </div>
+  </section>
 </form>

@@ -9,7 +9,8 @@ import { TreatmentElementComponent } from 'src/app/models/treatment-element-comp
 })
 export class ElementBuilderComponent implements OnInit {
   @Input() component!: TreatmentElementComponent;
-  @Input() form!: FormGroup;
+  // @Input() form!: FormGroup;
+  @Input() formGroupName!: number;
 
   text!: string; // temp until replaced with form
 

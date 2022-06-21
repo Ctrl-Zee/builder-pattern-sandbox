@@ -13,7 +13,7 @@ export class FormControlService {
 
     element.forEach((element) => {
       group[element.componentDefinitionId] = element.required
-        ? new FormControl(element.textValue || '', Validators.required)
+        ? new FormControl(element.textValue || '', Validators.required) // TODO refactor to allow selects
         : new FormControl(element.textValue || '');
     });
     return new FormGroup(group);

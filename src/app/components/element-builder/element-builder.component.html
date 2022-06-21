@@ -1,4 +1,4 @@
-<div [formGroup]="form">
+<div [formGroupName]="formGroupName">
   <div [ngSwitch]="component.componentDefinition?.controlTypeId">
     <p-editor
       *ngSwitchCase="1"
