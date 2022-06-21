@@ -1,0 +1,44 @@
+<div [formGroup]="form">
+  <div [ngSwitch]="component.componentDefinition?.controlTypeId">
+    <p-editor
+      *ngSwitchCase="1"
+      [formControlName]="component.componentDefinitionId"
+      [style]="{ height: '320px' }"
+    >
+      <!-- formControlName must be what we use as the key in form-control.service -->
+      <ng-template pTemplate="header">
+        <span class="ql-formats">
+          <button type="button" class="ql-bold" aria-label="Bold"></button>
+          <button type="button" class="ql-italic" aria-label="Italic"></button>
+          <button
+            type="button"
+            class="ql-underline"
+            aria-label="Underline"
+          ></button>
+        </span>
+      </ng-template>
+    </p-editor>
+    <!-- <span *ngSwitchCase="1">Put the radio buttons here</span> -->
+  </div>
+</div>
+
+<!-- <form>
+  <div *ngFor="let component of components">
+    <p-editor
+      *ngIf="component.componentDefinition?.controlTypeId === 1"
+      [style]="{ height: '320px' }"
+    >
+      <ng-template pTemplate="header">
+        <span class="ql-formats">
+          <button type="button" class="ql-bold" aria-label="Bold"></button>
+          <button type="button" class="ql-italic" aria-label="Italic"></button>
+          <button
+            type="button"
+            class="ql-underline"
+            aria-label="Underline"
+          ></button>
+        </span>
+      </ng-template>
+    </p-editor>
+  </div>
+</form> -->

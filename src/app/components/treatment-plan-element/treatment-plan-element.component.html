@@ -1,0 +1,3 @@
+<main *ngIf="sections$ | async as sections">
+  <app-dynamic-form [sections]="sections[0]"></app-dynamic-form>
+</main>
