@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { TreatmentElementComponent } from '../models/treatment-element-component';
 import { TreatmentPlanElementSection } from '../models/treatment-plan-element-section';
 import { Guid } from 'guid-typescript';
-import { of } from 'rxjs';
-import { FormControlService } from './form-control.service';
+import { concatMap, merge, of, scan, Subject, tap } from 'rxjs';
+import { Action } from '../models/action';
 
 enum ControlTypes {
   richTextBox = 1,
@@ -83,7 +83,34 @@ export class TreatmentPlanElementService {
     },
   ];
 
-  sections$ = of(this.section);
+  sectionsSource$ = of(this.section);
+
+  private elementModifiedActionSubject = new Subject<Action<TreatmentElementComponent>>();
+  elementModifiedAction$ = this.elementModifiedActionSubject.asObservable();
+
+  sections$ = merge(this.sectionsSource$, this.elementModifiedAction$).pipe(
+    scan((acc, value) => (value instanceof Array ? [...value] : this.modifyStream(acc, value)), [] as TreatmentPlanElementSection[]),
+    tap((data) => console.log(data))
+  );
 
   constructor() {}
+
+  modifyStream(sections: TreatmentPlanElementSection[], operation: Action<TreatmentElementComponent>): TreatmentPlanElementSection[] {
+    if (operation!.action === 'update') {
+      const updatedSection = this.updateSection(sections, operation.item);
+      return sections.map((section) => (section.id === updatedSection.id ? section : section));
+    }
+    return [...sections];
+  }
+
+  updateSection(sections: TreatmentPlanElementSection[], elementComponent: TreatmentElementComponent): TreatmentPlanElementSection {
+    const section = sections.filter((section) => section.id === elementComponent.sectionId)[0]; // need to take first element so we don't have an array
+    const elementIndex = section.components?.findIndex((c) => c.id === elementComponent.id) ?? 0;
+    section.components[elementIndex] = elementComponent;
+    return section;
+  }
+
+  onFormValueChange(component: TreatmentElementComponent) {
+    this.elementModifiedActionSubject.next({ item: component, action: 'update' });
+  }
 }

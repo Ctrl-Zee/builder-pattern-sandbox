@@ -1,8 +1,0 @@
-<form [formGroup]="treatmentPlanForm">
-  <div *ngFor="let component of sections.components">
-    <app-element-builder
-      [component]="component"
-      [form]="treatmentPlanForm"
-    ></app-element-builder>
-  </div>
-</form>

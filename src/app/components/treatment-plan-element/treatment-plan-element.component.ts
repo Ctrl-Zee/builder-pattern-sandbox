@@ -1,8 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { TreatmentElementComponent } from 'src/app/models/treatment-element-component';
-import { TreatmentPlanElementSection } from 'src/app/models/treatment-plan-element-section';
-import { FormControlService } from 'src/app/services/form-control.service';
 import { TreatmentPlanElementService } from 'src/app/services/treatment-plan-element.service';
 
 @Component({
@@ -11,9 +8,13 @@ import { TreatmentPlanElementService } from 'src/app/services/treatment-plan-ele
   styleUrls: ['./treatment-plan-element.component.scss'],
 })
 export class TreatmentPlanElementComponent implements OnInit {
-  sections$ = this.tpeService.sections$;
+  sections$ = this.treatmentPlanElementService.sections$;
 
-  constructor(private tpeService: TreatmentPlanElementService) {}
+  constructor(private treatmentPlanElementService: TreatmentPlanElementService) {}
 
   ngOnInit() {}
+
+  onNewValueEvent(component: TreatmentElementComponent) {
+    this.treatmentPlanElementService.onFormValueChange(component);
+  }
 }

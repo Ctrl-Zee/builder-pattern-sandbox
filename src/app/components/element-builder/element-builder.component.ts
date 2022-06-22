@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { tap, debounceTime, Subscription } from 'rxjs';
 import { TreatmentElementComponent } from 'src/app/models/treatment-element-component';
 
 @Component({
@@ -9,11 +10,33 @@ import { TreatmentElementComponent } from 'src/app/models/treatment-element-comp
 })
 export class ElementBuilderComponent implements OnInit {
   @Input() component!: TreatmentElementComponent;
-  @Input() form!: FormGroup;
+  @Output() newValueEvent = new EventEmitter<TreatmentElementComponent>();
 
-  text!: string; // temp until replaced with form
+  elementForm!: FormGroup;
+  elementValueSubscription!: Subscription;
 
-  constructor() {}
+  constructor(private formBuilder: FormBuilder) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.elementForm = this.formBuilder.group({
+      element: this.component.required ? new FormControl(this.component.textValue || '', Validators.required) : new FormControl(this.component.textValue || ''),
+    });
+
+    //Get the value from the form control and emit it.
+    this.elementValueSubscription = this.elementForm.controls['element'].valueChanges
+      .pipe(
+        debounceTime(500),
+        tap((value) => this.emitNewValue(value))
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.elementValueSubscription.unsubscribe();
+  }
+
+  emitNewValue(value: string) {
+    const elementComponent = { ...this.component, textValue: value };
+    this.newValueEvent.emit(elementComponent);
+  }
 }

@@ -1,3 +1,17 @@
 <main *ngIf="sections$ | async as sections">
-  <app-dynamic-form [sections]="sections[0]"></app-dynamic-form>
+  <section>
+    <div class="section-header">Treatment Group</div>
+    <select name="" id=""></select>
+  </section>
+
+  <section *ngFor="let section of sections">
+    <div class="section-header">{{ section.codeDescription }}</div>
+    <div *ngFor="let component of section.components">
+      <app-element-builder
+        [component]="component"
+        (newValueEvent)="onNewValueEvent($event)"
+      ></app-element-builder>
+    </div>
+  </section>
+  <!-- <app-dynamic-form [sections]="sections[0]"></app-dynamic-form> -->
 </main>

@@ -4,7 +4,7 @@ export interface TreatmentElementComponent extends GuidKeyBase {
   treatmentPlanElementId: string; // remove nullable
   componentDefinitionId: number;
   componentDefinition?: ElementComponentDefinition; // I don't like that this is nullable
-  sectionId?: number;
+  sectionId: number;
   singleSelectionValue?: number;
   textValue?: string;
   multiSelectValue?: string;

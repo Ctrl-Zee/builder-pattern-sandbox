@@ -8,15 +8,12 @@ import { TreatmentPlanElementComponent } from './components/treatment-plan-eleme
 import { EditorModule } from 'primeng/editor';
 import { ElementBuilderComponent } from './components/element-builder/element-builder.component';
 import { TreatmentPlanElementService } from './services/treatment-plan-element.service';
-import { FormControlService } from './services/form-control.service';
-import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TreatmentPlanElementComponent,
     ElementBuilderComponent,
-    DynamicFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,7 +22,7 @@ import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.com
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [TreatmentPlanElementService, FormControlService],
+  providers: [TreatmentPlanElementService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
