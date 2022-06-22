@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TreatmentElementComponent } from '../models/treatment-element-component';
 import { TreatmentPlanElementSection } from '../models/treatment-plan-element-section';
 import { Guid } from 'guid-typescript';
-import { concatMap, merge, of, scan, Subject, tap } from 'rxjs';
+import { concatMap, merge, Observable, of, scan, Subject, tap } from 'rxjs';
 import { Action } from '../models/action';
 
 enum ControlTypes {
@@ -88,21 +88,44 @@ export class TreatmentPlanElementService {
   private elementModifiedActionSubject = new Subject<Action<TreatmentElementComponent>>();
   elementModifiedAction$ = this.elementModifiedActionSubject.asObservable();
 
+  // TODO: Call the processAction method to save the data.
   sections$ = merge(this.sectionsSource$, this.elementModifiedAction$).pipe(
     scan((acc, value) => (value instanceof Array ? [...value] : this.modifyStream(acc, value)), [] as TreatmentPlanElementSection[]),
-    tap((data) => console.log(data))
+    tap((data) => console.log(data)) // * This will show the modified section$ stream
   );
 
   constructor() {}
 
+  /**
+   * Modifies a source stream based on an action.
+   * @param sections
+   * @param operation
+   * @returns A modified TreatmentPlanElementSection array based on the action stream
+   */
   modifyStream(sections: TreatmentPlanElementSection[], operation: Action<TreatmentElementComponent>): TreatmentPlanElementSection[] {
+    const updatedSection = this.updateSection(sections, operation.item); // get updated section to use for all CRUD operations
     if (operation!.action === 'update') {
-      const updatedSection = this.updateSection(sections, operation.item);
       return sections.map((section) => (section.id === updatedSection.id ? section : section));
     }
     return [...sections];
   }
 
+  processAction(elementComponentAction: Action<TreatmentElementComponent>): Observable<Action<TreatmentElementComponent>> {
+    switch (elementComponentAction.action) {
+      case 'update':
+        // TODO Make a call to the API to save the data and return the updated object
+        return of({} as Action<TreatmentElementComponent>);
+      default:
+        return of({} as Action<TreatmentElementComponent>);
+    }
+  }
+
+  /**
+   * Find and update the section object with the new TreatmentElementComponent
+   * @param sections
+   * @param elementComponent
+   * @returns A TreatmentPlanElementSection with the updated component
+   */
   updateSection(sections: TreatmentPlanElementSection[], elementComponent: TreatmentElementComponent): TreatmentPlanElementSection {
     const section = sections.filter((section) => section.id === elementComponent.sectionId)[0]; // need to take first element so we don't have an array
     const elementIndex = section.components?.findIndex((c) => c.id === elementComponent.id) ?? 0;
@@ -110,6 +133,7 @@ export class TreatmentPlanElementService {
     return section;
   }
 
+  /** Single point of entry to call the subjects next method */
   onFormValueChange(component: TreatmentElementComponent) {
     this.elementModifiedActionSubject.next({ item: component, action: 'update' });
   }
